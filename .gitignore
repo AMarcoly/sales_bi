@@ -1,0 +1,21 @@
+# Python / notebooks
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Données volumineuses (garde seulement des échantillons)
+data/raw/*
+data/external/*
+data/interim/*
+data/processed/*
+
+# BI/exports lourds
+dashboards/*.png
+dashboards/*.pdf
+
+# OS / éditeurs
+.DS_Store
+*.swp
+.env
