@@ -1,17 +1,17 @@
--- Extensions utiles
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
--- Schémas couche par couche
-CREATE SCHEMA IF NOT EXISTS staging;
-CREATE SCHEMA IF NOT EXISTS warehouse;
-CREATE SCHEMA IF NOT EXISTS marts;
-
--- Contrôle minimal : rôles en lecture seule pour BI (facultatif)
+-- Création du rôle applicatif si nécessaire
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'bi_reader') THEN
-    CREATE ROLE bi_reader NOLOGIN;
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'sales_user') THEN
+    CREATE ROLE sales_user WITH LOGIN PASSWORD 'sales_pass_123';
   END IF;
-END$$;
+END
+$$;
 
-GRANT USAGE ON SCHEMA staging, warehouse, marts TO bi_reader;
+-- Création de la base si nécessaire (sera ignorée si déjà existante)
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'sales_dw') THEN
+    CREATE DATABASE sales_dw OWNER sales_user;
+  END IF;
+END
+$$;
